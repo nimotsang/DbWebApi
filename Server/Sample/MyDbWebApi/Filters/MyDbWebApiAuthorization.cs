@@ -2,16 +2,15 @@
 using System.Linq;
 using System.Text;
 using DataBooster.DbWebApi;
+using TokenAuthMVC.Managers;
 
 namespace MyDbWebApi
 {
 	public class MyDbWebApiAuthorization : IDbWebApiAuthorization
 	{
-		public bool IsAuthorized(string userName, string storedProcedure, object state = null)
-		{
-			// TO DO, to implementate your own authorization logic
-			return true;	// If allow permission
-			return false;	// If deny permission
-		}
-	}
+        public bool IsAuthorized(string token, string ip, object state = null)
+        {
+            return SecurityManager.IsTokenValid(token, ip, state as string);
+        }
+    }
 }

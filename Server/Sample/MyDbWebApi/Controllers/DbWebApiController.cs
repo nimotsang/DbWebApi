@@ -18,7 +18,7 @@ namespace MyDbWebApi.Controllers
 		{
 			allParameters = InputParameters.SupplementFromQueryString(allParameters, Request);	// Supplement input parameters from URI query string.
 
-			SetUserName(allParameters);							// Set the conventional User Name Parameter if configured.
+			//SetUserName(allParameters);							// Set the conventional User Name Parameter if configured.
 
 			return this.DynExecuteDbApi(sp, allParameters);		// The main entry point to call the DbWebApi.
 		}

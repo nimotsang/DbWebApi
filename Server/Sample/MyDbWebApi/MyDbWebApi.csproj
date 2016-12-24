@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -115,6 +116,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <None Include="Properties\PublishProfiles\MOC.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="SqlScripts\SqlServer\DBWEBAPI_DETECT_DDL_CHANGES.sql" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -122,20 +128,30 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="ConfigHelper.cs" />
     <Compile Include="Controllers\DbWebApiController.cs" />
+    <Compile Include="Controllers\IpController.cs" />
     <Compile Include="Controllers\MiscController.cs" />
+    <Compile Include="Filters\CommonManager.cs" />
     <Compile Include="Filters\DbWebApiAuthorizeAttribute.cs" />
     <Compile Include="Filters\MyDbWebApiAuthorization.cs" />
+    <Compile Include="Filters\SecurityManager.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.MyDbWebApi.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <None Include="Web.MyDbWebApi.config" />
+    <None Include="Web.MyDbWebApi.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
