@@ -30,18 +30,25 @@ namespace MyDbWebApi
             var content = actionContext.Request.Content.ReadAsStringAsync();
             if (content.Result == null)
                 return false;
-            dynamic data = JObject.Parse(content.Result);
-            string token = data.token;
-            //string user = userIdentity.Name;
-			//string sp = actionContext.ControllerContext.RouteData.Values["sp"] as string;
+            JObject data = JObject.Parse(content.Result);
+                        
+            string sessionId = data.Value<string>("sessionId");
+            if (!string.IsNullOrWhiteSpace(sessionId))
+            {
+                return SecurityManager.IsSessionIdValid(sessionId);
+            }
 
-			//return _DbWebApiAuthorization.IsAuthorized(user, sp);
+            string token = data.Value<string>("token"); ;
+            //string user = userIdentity.Name;
+            //string sp = actionContext.ControllerContext.RouteData.Values["sp"] as string;
+
+            //return _DbWebApiAuthorization.IsAuthorized(user, sp);
 
             string ip = CommonManager.GetIP(((HttpContextWrapper)actionContext.Request.Properties["MS_HttpContext"]).Request);
 
             //string token = context.Request.Form["token"];          
             //string ip = CommonManager.GetIP(context.Request);
-            string agent = ((HttpContextWrapper)actionContext.Request.Properties["MS_HttpContext"]).Request.UserAgent;
+            string agent = ((HttpContextWrapper)actionContext.Request.Properties["MS_HttpContext"]).Request.UserAgent;            
 
             return _DbWebApiAuthorization.IsAuthorized(token, ip, agent);
 		}

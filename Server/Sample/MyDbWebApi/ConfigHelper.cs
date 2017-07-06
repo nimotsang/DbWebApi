@@ -5,7 +5,8 @@ namespace MyDbWebApi
 	public static class ConfigHelper
 	{
 		private const string _UserNameReservedParameterSettingKey = "UserNameReservedParameter";
-		private const string _CorsOriginsSettingKey = "CorsOrigins";
+        private const string _POSServiceUrlSettingKey = "POSServiceUrl";
+        private const string _CorsOriginsSettingKey = "CorsOrigins";
 		private const string _SupportsCredentialsSettingKey = "CorsSupportsCredentials";
 		private const string _PreflightMaxAgeSettingKey = "CorsPreflightMaxAge";
 
@@ -30,7 +31,28 @@ namespace MyDbWebApi
 			}
 		}
 
-		private static string _CorsOrigins = null;
+        private static string _posServiceUrl = null;
+        public static string POSServiceUrl
+        {
+            get
+            {
+                if (_posServiceUrl == null)
+                {
+                    _posServiceUrl = ConfigurationManager.AppSettings[_POSServiceUrlSettingKey];
+
+                    if (_posServiceUrl == null)
+                        _posServiceUrl = string.Empty;
+                }
+
+                return _posServiceUrl;
+            }
+            set
+            {
+                _posServiceUrl = value;
+            }
+        }
+
+        private static string _CorsOrigins = null;
 		public static string CorsOrigins
 		{
 			get

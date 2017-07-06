@@ -7,6 +7,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using MyDbWebApi;
 
 namespace TokenAuthMVC.Managers
 {
@@ -150,6 +153,50 @@ namespace TokenAuthMVC.Managers
                 throw ex;
             }
             return result;
+        }
+
+        public static bool IsSessionIdValid(string sessionId)
+        {
+            string posUrl = ConfigHelper.POSServiceUrl;
+            if (string.IsNullOrWhiteSpace(posUrl))
+                return false;
+
+            string url = string.Format("{0}/posservice.svc/validate-token", posUrl.TrimEnd('/'));
+            string tokenKey = "SessionId";
+            return ValidateToken(sessionId, url, tokenKey);
+        }
+
+        private static bool ValidateToken(string sessionToken, string requestUri, string tokenKey)
+        {
+            bool isTokenValid = false;
+
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage();
+            request.Method = HttpMethod.Get;
+            request.RequestUri = new Uri(requestUri);
+            request.Headers.Add(tokenKey, sessionToken);
+
+            try
+            {
+                HttpResponseMessage response = client.SendAsync(request).Result;
+                if (!response.IsSuccessStatusCode)
+                    return false;
+                else
+                {
+                    string result = response.Content.ReadAsStringAsync().Result;
+                    dynamic jsonResult = JObject.Parse(result);
+                    if (jsonResult != null)
+                    {
+                        isTokenValid = jsonResult.Value<bool>("IsTokenValid");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return isTokenValid;
         }
     }
 }
