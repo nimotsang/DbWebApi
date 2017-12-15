@@ -18,7 +18,7 @@ using DbParallel.DataAccess;
 
 namespace DataBooster.DbWebApi.Client
 {
-	public class DbWebApiClient : IDisposable
+	public partial class DbWebApiClient : IDisposable
 	{
 		const string _DefaultJsonInputParameterName = "JsonInput";
 		private bool _CreatedInternalClient;
@@ -435,7 +435,7 @@ namespace DataBooster.DbWebApi.Client
 #if WEB_API2
 		protected async Task<T> ExecAsAsync<T>(string requestUri, IDictionary<string, object> inputParameters, CancellationToken cancellationToken) where T : class
 		{
-			HttpResponseMessage httpResponse = await ExecRawAsync(requestUri, inputParameters, cancellationToken);
+			HttpResponseMessage httpResponse = await ExecRawAsync(requestUri, inputParameters, cancellationToken).ConfigureAwait(false);
 			return httpResponse.ReadAs<T>();
 		}
 #else	// ASP.NET Web API 1
@@ -491,7 +491,7 @@ namespace DataBooster.DbWebApi.Client
 #if WEB_API2
 		protected async Task<T> BulkExecAsAsync<T>(string requestUri, ICollection<IDictionary<string, object>> bulkInputParameterSets, CancellationToken cancellationToken) where T : class
 		{
-			HttpResponseMessage httpResponse = await BulkExecRawAsync(requestUri, bulkInputParameterSets, cancellationToken);
+			HttpResponseMessage httpResponse = await BulkExecRawAsync(requestUri, bulkInputParameterSets, cancellationToken).ConfigureAwait(false);
 			return httpResponse.ReadAs<T>();
 		}
 #else	// ASP.NET Web API 1
