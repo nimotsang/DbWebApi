@@ -38,19 +38,26 @@ namespace MyDbWebApi
                 return SecurityManager.IsSessionIdValid(sessionId);
             }
 
+            // add appId for 3rd parties applications 
+            string appId = data.Value<string>("appId");
+            if (!string.IsNullOrWhiteSpace(appId))
+            {
+                return SecurityManager.IsAppIdValid(appId);
+            }
+
             string token = data.Value<string>("token"); ;
             //string user = userIdentity.Name;
             //string sp = actionContext.ControllerContext.RouteData.Values["sp"] as string;
 
             //return _DbWebApiAuthorization.IsAuthorized(user, sp);
 
-            string ip = CommonManager.GetIP(((HttpContextWrapper)actionContext.Request.Properties["MS_HttpContext"]).Request);
+            //string ip = CommonManager.GetIP(((HttpContextWrapper)actionContext.Request.Properties["MS_HttpContext"]).Request);
 
             //string token = context.Request.Form["token"];          
             //string ip = CommonManager.GetIP(context.Request);
             string agent = ((HttpContextWrapper)actionContext.Request.Properties["MS_HttpContext"]).Request.UserAgent;            
 
-            return _DbWebApiAuthorization.IsAuthorized(token, ip, agent);
+            return _DbWebApiAuthorization.IsAuthorized(token, agent);
 		}
 	}
 }

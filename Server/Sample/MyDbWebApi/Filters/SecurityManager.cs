@@ -42,9 +42,9 @@ namespace TokenAuthMVC.Managers
         /// 3. Hash the username:ip:userAgent:timeStamp with the key of password:salt to compute a token.
         /// 4. Compare the computed token with the one supplied and ensure they match.
         /// </summary>
-        public static string GenerateToken(string username, string password, string ip, string userAgent, long ticks)
+        public static string GenerateToken(string username, string password, string userAgent, long ticks)
         {
-            string hash = string.Join(":", new string[] { username, ip, userAgent, ticks.ToString() });
+            string hash = string.Join(":", new string[] { username, userAgent, ticks.ToString() });
             string hashLeft = "";
             string hashRight = "";
 
@@ -86,7 +86,7 @@ namespace TokenAuthMVC.Managers
         /// <param name="ip">string - IP address of client, passed in by RESTAuthenticate attribute on controller.</param>
         /// <param name="userAgent">string - user-agent of client, passed in by RESTAuthenticate attribute on controller.</param>
         /// <returns>bool</returns>
-        public static bool IsTokenValid(string token, string ip, string userAgent)
+        public static bool IsTokenValid(string token, string userAgent)
         {
             bool result = false;
             try
@@ -112,25 +112,29 @@ namespace TokenAuthMVC.Managers
                         // Lookup the user's account from the db.
                         //
                         string conectionString = ConfigurationManager.ConnectionStrings["DataBooster.DbWebApi.MainConnection"].ToString();
+                        string configTableName = ConfigHelper.TableNameParameter;
+                        string configUserName = ConfigHelper.UserNameParameter;
+                        string configPassword = ConfigHelper.PasswordParameter;
+
                         using (var conn = new SqlConnection(conectionString))
                         {
                             using (var command = conn.CreateCommand())
                             {
                                 conn.Open();
-                                command.CommandText = "Select UserName, PassWord from GatewayPaymentUser where UserName=@UserName";
+                                command.CommandText = "Select " + configUserName + "," + configPassword + " from " + configTableName + " where " + configUserName + " = "+ "'"+username+"'"; //" UserName, PassWord from GatewayPaymentUser where UserName=@UserName";
                                 command.CommandTimeout = 300;
                                 command.CommandType = CommandType.Text;
-                                command.Parameters.AddWithValue("@UserName", username);                                
+                                //command.Parameters.AddWithValue("@UserName", username);
 
                                 var reader = command.ExecuteReader();
                                 if (reader.Read())
                                 {
                                     string usernameDB = reader.GetString(0);
-                                    if (usernameDB==username)
+                                    if (usernameDB == username)
                                     {
                                         string password = reader.GetString(1);
                                         // Hash the message with the key to generate a token.
-                                        string computedToken = GenerateToken(username, password, ip, userAgent, ticks);
+                                        string computedToken = GenerateToken(username, password, userAgent, ticks);
 
                                         // Compare the computed token with the one supplied and ensure they match.
                                         result = (token == computedToken);
@@ -197,6 +201,16 @@ namespace TokenAuthMVC.Managers
             }
 
             return isTokenValid;
+        }
+
+        public static bool IsAppIdValid(string appId)
+        {
+            bool result = false;
+            string configAppId = ConfigHelper.AppId;
+            if (string.IsNullOrWhiteSpace(appId))
+                return false;
+            result = (configAppId == appId);
+            return result;
         }
     }
 }

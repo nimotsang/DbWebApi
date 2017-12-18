@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MyDbWebApi")]
-[assembly: AssemblyDescription("An example ASP.NET Web API Server of DataBooster.DbWebApi. https://github.com/DataBooster/DbWebApi")]
+[assembly: AssemblyTitle("MOCDBAPI")]
+[assembly: AssemblyDescription("Mosaic on Cloud Web API for Common Services")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DataBooster")]
+[assembly: AssemblyCompany("ShopFish")]
 [assembly: AssemblyProduct("MyDbWebApi")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]

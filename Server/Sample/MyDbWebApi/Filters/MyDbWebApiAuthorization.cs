@@ -8,9 +8,9 @@ namespace MyDbWebApi
 {
 	public class MyDbWebApiAuthorization : IDbWebApiAuthorization
 	{
-        public bool IsAuthorized(string token, string ip, object state = null)
+        public bool IsAuthorized(string token, string userAgent, object state = null)
         {
-            return SecurityManager.IsTokenValid(token, ip, state as string);
+            return SecurityManager.IsTokenValid(token, userAgent);
         }
     }
 }
